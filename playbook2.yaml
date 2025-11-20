@@ -1,0 +1,103 @@
+---
+- hosts: lamp_servers
+  tasks:
+    - block:
+        - name: Install MySQL
+          yum:
+            name: mysql-server
+            state: present
+        - name: Start MySQL Service
+          service:
+            name: mysql-server
+            state: started
+      become_user: db-user
+      when: ansible_facts['distribution'] == 'CentOS'
+      rescue:
+        - mail:
+            to: admin@company.com
+            subject: Installation Failed
+            body: DB Install Failed at {{ ansible_failed_task.name }}
+      always:
+        - mail:
+            to: admin@company.com
+            subject: Installation Status
+            body: DB Install Status = {{ ansible_failed_result }}
+
+---
+- name: Deploy web application
+  hosts: server1,server2,server3
+  any_errors_fatal: true # true means that if any task fails, the playbook will stop
+  tasks:
+    - name: Install dependencies
+      # << code hidden >>
+
+    - name: Install MySQL Database
+      # << code hidden >>
+
+    - name: Start MySQL Service
+      # << code hidden >>
+
+    - name: Install Python Flask Dependencies
+      # << code hidden >>
+
+    - name: Run web-server
+      # << code hidden >>
+
+    - name: Send notification email
+      mail:
+        to: admin@company.com
+        subject: Server Configured
+        body: Web server has been configured
+---
+
+- name: Deploy web application
+  hosts: server1,server2,server3
+  max_fail_percentage: 30
+  tasks:
+    - name: Install dependencies
+      # << code hidden >>
+
+    - name: Install MySQL Database
+      # << code hidden >>
+
+    - name: Start MySQL Service
+      # << code hidden >>
+
+    - name: Install Python Flask Dependencies
+      # << code hidden >>
+
+    - name: Run web-server
+      # << code hidden >>
+
+    - name: Send notification email
+      mail:
+        to: admin@company.com
+        subject: Server Configured
+        body: Web server has been configured
+---
+- name: Deploy web application
+  hosts: server1,server2,server3
+  max_fail_percentage: 30
+  tasks:
+    - name: Install dependencies
+      # << code hidden >>
+
+    - name: Install MySQL Database
+      # << code hidden >>
+
+    - name: Start MySQL Service
+      # << code hidden >>
+
+    - name: Install Python Flask Dependencies
+      # << code hidden >>
+
+    - name: Run web-server
+      # << code hidden >>
+
+    - name: Send notification email
+      mail:
+        to: admin@company.com
+        subject: Server Configured
+        body: Web server has been configured
+      ignore_errors: yes
+---

@@ -1,0 +1,64 @@
+---
+- hosts: server1
+  tasks:
+  - name: Install MySQL
+    apt:
+      name: mysql-server
+      state: present
+    become_user: db-user
+    when: ansible_facts['distribution'] == 'CentOS'
+
+  - name: Start MySQL Service
+    service:
+      name: mysql-server
+      state: started
+    become_user: db-user
+    when: ansible_facts['distribution'] == 'CentOS'
+
+  - name: Install Nginx
+    apt:
+      name: nginx
+      state: present
+    become_user: web-user
+    when: ansible_facts['distribution'] == 'CentOS'
+
+  - name: Start Nginx Service
+    service:
+      name: nginx
+      state: started
+    become_user: web-user
+    when: ansible_facts['distribution'] == 'CentOS'
+
+
+
+
+
+
+
+
+
+---
+- hosts: lamp_servers
+  tasks:
+    - block:
+        - name: Install MySQL
+          apt:
+            name: mysql-server
+            state: present
+        - name: Start MySQL Service
+          service:
+            name: mysql-server
+            state: started
+      become_user: db-user
+      when: ansible_facts['distribution'] == 'CentOS'
+    - block:
+        - name: Install Nginx
+          apt:
+            name: nginx
+            state: present
+        - name: Start Nginx Service
+          service:
+            name: nginx
+            state: started
+      become_user: web-user
+      when: ansible_facts['distribution'] == 'CentOS'

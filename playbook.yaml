@@ -1,0 +1,15 @@
+- name: Check /etc/hosts file
+  hosts: lamp_servers
+  tasks:
+    - name: Read /etc/hosts
+      shell: cat /etc/hosts
+      register: result
+    - name: Display result
+      debug:
+        var: result.rc
+---
+- name: Play2
+  hosts: lamp_servers
+  tasks:
+    - debug:
+        var: result.rc
